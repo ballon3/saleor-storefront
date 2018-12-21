@@ -2,9 +2,9 @@ import * as React from "react";
 import { Query } from "react-apollo";
 import { Link } from "react-router-dom";
 
-import { Carousel, Loader, ProductListItem } from "..";
+import { Carousel, ProductListItem } from "..";
 import { generateProductUrl, maybe } from "../../core/utils";
-import { GET_FEATURED_PRODUCTS } from "./queries";
+import { TypedFeaturedProductsQuery } from "./queries";
 
 import "./scss/index.scss";
 
@@ -14,8 +14,8 @@ interface ProductsFeaturedProps {
 
 const ProductsFeatured: React.SFC<ProductsFeaturedProps> = ({ title }) => {
   return (
-    <Query query={GET_FEATURED_PRODUCTS}>
-      {({ error, data, loading }) => {
+    <TypedFeaturedProductsQuery displayError={false}>
+      {({ data }) => {
         const products = maybe(
           () => data.shop.homepageCollection.products.edges,
           []
@@ -40,12 +40,8 @@ const ProductsFeatured: React.SFC<ProductsFeaturedProps> = ({ title }) => {
             </div>
           );
         }
-        if (loading) {
-          return <Loader />;
-        }
-        return null;
       }}
-    </Query>
+    </TypedFeaturedProductsQuery>
   );
 };
 
